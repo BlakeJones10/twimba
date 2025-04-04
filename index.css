@@ -115,7 +115,7 @@ button{
     border-radius: 50px;
 }
 
-.reply-btn {
+.reply-btn, .delte-btn {
     margin-top: 5px;
     padding: 8px 15px;
     font-size: 14px;
@@ -127,7 +127,7 @@ button{
     transition: background-color 0.2s ease;
 }
 
-.reply-btn:hover {
+.reply-btn:hover, .delte-btn:hover {
     background-color: #0d8de1;
 }
 

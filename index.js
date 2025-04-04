@@ -1,7 +1,7 @@
 import { tweetsData } from './data.js';
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
-document.addEventListener('click', function(e){
+document.addEventListener('click', (e) => {
     if(e.target.dataset.like){
        handleLikeClick(e.target.dataset.like); 
     }
@@ -16,11 +16,14 @@ document.addEventListener('click', function(e){
     }
     else if (e.target.dataset.replyBtn) {
         handleReplyInput(e.target.dataset.replyBtn);
+    } 
+    else if (e.target.dataset.deleteBtn) {
+        deleteReply(e.target.dataset.deleteBtn);
     }
 });
 
 function handleLikeClick(tweetId){ 
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = tweetsData.filter((tweet) => {
         return tweet.uuid === tweetId;
     })[0];
 
@@ -35,7 +38,7 @@ function handleLikeClick(tweetId){
 }
 
 function handleRetweetClick(tweetId){
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = tweetsData.filter((tweet) =>{
         return tweet.uuid === tweetId;
     })[0];
     
@@ -77,7 +80,7 @@ function handleReplyInput(tweetId){
     const replyInput = document.getElementById(`reply-input-${tweetId}`);
     const replyText = replyInput.value;
     if (replyText){
-        const targetTweetObj = tweetsData.filter(function(tweet){
+        const targetTweetObj = tweetsData.filter((tweet) => {
             return tweet.uuid === tweetId;
         })[0];
         
@@ -93,10 +96,23 @@ function handleReplyInput(tweetId){
 
 }
 
+function deleteReply(tweetId){
+    const targetTweetObj= tweetsData.filter((tweet) => {
+        return tweet.uuid === tweetId;
+    }
+    )[0];
+    const targetReply = targetTweetObj.replies.filter((reply) => {
+        return reply.uuid === tweetId;
+    })[0];
+    const targetReplyIndex = targetTweetObj.replies.indexOf(targetReply);
+    targetTweetObj.replies.splice(targetReplyIndex, 1);
+    render();
+}
+
 function getFeedHtml(){
     let feedHtml = ``;
     
-    tweetsData.forEach(function(tweet){
+    tweetsData.forEach((tweet) => {
         
         let likeIconClass = '';
         
@@ -113,7 +129,7 @@ function getFeedHtml(){
         let repliesHtml = '';
         
         if(tweet.replies.length > 0){
-            tweet.replies.forEach(function(reply){
+            tweet.replies.forEach((reply) => {
                 repliesHtml += `
 <div class="tweet-reply">
     <div class="tweet-inner">
@@ -127,8 +143,7 @@ function getFeedHtml(){
 `;
             });
         }
-        
-          
+                  
         feedHtml += `
 <div class="tweet">
     <div class="tweet-inner">
@@ -163,7 +178,9 @@ function getFeedHtml(){
         <div class="tweet-reply">
             <input class="reply" id="reply-input-${tweet.uuid}" type="text" placeholder="Reply...">
             <button class="reply-btn" data-reply-btn="${tweet.uuid}">Reply</button>
-    </div>   
+            <button class="delete-btn" data-delete-btn="${tweet.uuid}">Delete Reply</button>
+    </div>
+
 </div>
 `;
    });
